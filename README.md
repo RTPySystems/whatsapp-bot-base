@@ -1,6 +1,6 @@
-![WHATSAPP Bot Base por RTPySystems](assets/banner.png)
+![WHATSAPP Bot Base por RTPySystems](https://raw.githubusercontent.com/RTPySystems/whatsapp-bot-base/main/assets/banner.png)
 
-![Node.js 24 LTS · Baileys 7.0.0-rc14 · MIT · ESM](assets/badges.png)
+![Node.js 24 LTS · Baileys 7.0.0-rc14 · MIT · ESM](https://raw.githubusercontent.com/RTPySystems/whatsapp-bot-base/main/assets/badges.png)
 
 # WhatsApp Bot Base
 
@@ -21,7 +21,7 @@ tem seu lugar, do primeiro comando até o encerramento do processo.
 | **Proteção desde o começo** | Anti-spam por remetente, deduplicação, fila limitada e grupos desativados por padrão. Sem disparos em massa.      |
 | **Qualidade e segurança**   | ESLint, Prettier, testes com `node:test`, CI configurada, configuração validada e logs sem conteúdo de conversas. |
 
-![Fluxo: MENSAGEM → ANTI-SPAM → ROTEADOR → RESPOSTA](assets/architecture.png)
+![Fluxo: MENSAGEM → ANTI-SPAM → ROTEADOR → RESPOSTA](https://raw.githubusercontent.com/RTPySystems/whatsapp-bot-base/main/assets/architecture.png)
 
 ## Começar
 
