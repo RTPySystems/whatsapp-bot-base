@@ -11,10 +11,11 @@ const logger = { info() {}, warn() {}, error() {} };
 const config = loadConfig({ WHATSAPP_ENABLED: 'true' });
 
 function setup(extra = {}, configExtra = {}) {
+  const { route = async () => {}, ...dependencies } = extra;
   const sockets = [];
   let saved = 0;
   let fatal = 0;
-  const manager = createConnection({ ...config, ...configExtra }, logger, async () => {}, {
+  const manager = createConnection({ ...config, ...configExtra }, logger, route, {
     makeSocket: () => {
       const socket = {
         ev: new EventEmitter(),
@@ -35,7 +36,7 @@ function setup(extra = {}, configExtra = {}) {
     onFatal: () => {
       fatal++;
     },
-    ...extra,
+    ...dependencies,
   });
   return {
     manager,
@@ -106,5 +107,42 @@ test('logout é fatal e não apaga a sessão automaticamente', async () => {
   await setImmediate();
   assert.equal(ctx.fatal, 1);
   assert.equal(ctx.sockets.length, 1);
+  await ctx.manager.stop();
+});
+
+test('reconexão agendada cria um socket novo e remove o antigo', async () => {
+  let reconnect;
+  const ctx = setup({
+    schedule: (fn) => {
+      reconnect = fn;
+      return 1;
+    },
+  });
+  await ctx.manager.start();
+  ctx.sockets[0].ev.emit('connection.update', { connection: 'close' });
+  await setImmediate();
+  assert.equal(ctx.sockets[0].ev.listenerCount('connection.update'), 0);
+  reconnect();
+  await setImmediate();
+  assert.equal(ctx.sockets.length, 2);
+  assert.equal(ctx.fatal, 0);
+  await ctx.manager.stop();
+});
+
+test('histórico é ignorado e notificações passam em ordem pela fila', async () => {
+  const processed = [];
+  const ctx = setup({
+    route: async (_, message) => {
+      processed.push(message.id);
+    },
+  });
+  await ctx.manager.start();
+  ctx.sockets[0].ev.emit('messages.upsert', { type: 'append', messages: [{ id: 'antiga' }] });
+  ctx.sockets[0].ev.emit('messages.upsert', {
+    type: 'notify',
+    messages: [{ id: '1' }, { id: '2' }],
+  });
+  await setImmediate();
+  assert.deepEqual(processed, ['1', '2']);
   await ctx.manager.stop();
 });
