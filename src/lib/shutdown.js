@@ -33,5 +33,5 @@ export function installShutdown({ logger, stop, timeoutMs = 10_000 }) {
   process.once('SIGINT', onInt);
   process.once('uncaughtException', onException);
   process.once('unhandledRejection', onException);
-  return { shutdown, cleanup };
+  return { shutdown, cleanup, isStopping: () => stopping };
 }

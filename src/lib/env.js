@@ -26,7 +26,9 @@ export function integer(env, key, fallback, min = 1, max = 1_000_000) {
 export function logLevel(env) {
   const level = env.LOG_LEVEL || 'info';
   if (!['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'].includes(level)) {
-    throw new ConfigError('LOG_LEVEL inválido. Use info, warn, error, debug, trace, fatal ou silent.');
+    throw new ConfigError(
+      'LOG_LEVEL inválido. Use info, warn, error, debug, trace, fatal ou silent.',
+    );
   }
   return level;
 }

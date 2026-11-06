@@ -2,7 +2,12 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 
 const env = { ...process.env };
-for (const key of ['DISCORD_TOKEN', 'DISCORD_CLIENT_ID', 'TELEGRAM_BOT_TOKEN', 'WHATSAPP_ENABLED']) {
+for (const key of [
+  'DISCORD_TOKEN',
+  'DISCORD_CLIENT_ID',
+  'TELEGRAM_BOT_TOKEN',
+  'WHATSAPP_ENABLED',
+]) {
   delete env[key];
 }
 const result = spawnSync(process.execPath, ['src/index.js'], {
